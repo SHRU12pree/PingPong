@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Ping Pong</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div id="wrap">
+        <div id="startMenu">
+          <h1>Ping Pong</h1>
+          <div id="userDetails">
+            <h2>Enter Your Name: </h2>
+            <input id="userName" type="text" />
+          </div>
+          <div>
+            <select id="level" name="Level">
+                <option value="1">Easy</option>
+                <option value="2">Medium</option>
+                <option value="3">Hard</option>
+              </select>
+          </div>
+          <button id="startBtn">Start</button>
+        </div>
+        <div id="pauseMenu">
+          <h1>Pause</h1>
+          <button id="continueBtn">Continue</button>
+          <button id="restartBtn">Restart</button>
+          <button id="quitBtn">Quit</button>
+        </div>
+        <div id="gameOverMenu">
+          <h1 id="gameMessage"></h1>
+          <h2 id="scoreMessage"></h2>
+          <button id="againBtn">Try again</button>
+        </div>
+        <div id="gameplay">
+          <canvas id="gameCanvas" width="800" height="600"></canvas>
+        </div>
+      </div>
+  <script  src="./script.js"></script>
+
+</body>
+</html>
