@@ -28,6 +28,7 @@ var canvas = document.getElementById('gameCanvas'),
     restartBtn = document.getElementById('restartBtn'),
     againBtn = document.getElementById('againBtn'),
     gameMessage = document.getElementById('gameMessage'),
+    levelUp = document.getElementById('levelUp'),
     scoreMessage = document.getElementById('scoreMessage'),
     gamePaused = false,
     gameInProgress = false,
@@ -50,6 +51,7 @@ quitBtn.addEventListener('click', quitGame);
 againBtn.addEventListener('click', resetGame); //When we plag again the game resetGame method is called
 document.addEventListener('keydown', keyDown); //This is used for up and down arrow of keys
 document.addEventListener('keyup', keyUp);
+levelUp.addEventListener('click', onLevelUp);
 
 startMenu.className = 'active';
 pauseMenu.className = '';
@@ -62,12 +64,14 @@ window.onblur = function() {
 }
 
 //On Start Button Click Start the Game
-function startGame() {
+function startGame(isNewGame = false) {
   if(userName.value === ''){
     alert('Please Enter Player Name.');
     return;
   }
-  difficultyLevel = parseInt(document.getElementById('level').value);
+  if(isNewGame){
+    difficultyLevel = parseInt(document.getElementById('level').value);
+  }
   gameInProgress = true;
   gameplay.className = '';
   startMenu.className = '';
@@ -81,7 +85,7 @@ function startGame() {
 }
 
 function quitGame(){
-  reset();
+  reset(1);
   difficultyLevel = 1;
   userName.value = '';
   startMenu.className = 'active';
@@ -90,14 +94,20 @@ function quitGame(){
 
 //This will reset the game back to initial state
 function resetGame() {
-  reset();
-  startGame();
+  reset(1);
+  startGame(true);
 }
 
-function reset(){
+function onLevelUp(){
+  difficultyLevel = difficultyLevel + 1;
+  reset(difficultyLevel);
+  startGame(false);
+}
+
+function reset(level){
   playerOneScore = 0;
   playerTwoScore = 0;
-  difficultyLevel = parseInt(document.getElementById('level').value);
+  difficultyLevel = parseInt(level);
   ballPositionX = canvas.width/2 - ballSize/2;
   ballPositionY = canvas.height/2 - ballSize/2;
   paddleOneY = canvas.height/2 - paddleHeight/2;
@@ -129,7 +139,7 @@ function resumeGame() {
     gamePaused = false;
     gameplay.className = '';
     pauseMenu.className = ''; 
-    startGame();
+    startGame(false);
   }
 }
 
@@ -166,6 +176,7 @@ function keyDown(e) {
   }
 }
 
+
 function keyUp(e) {
   paddleOneDirectionY = null;
 }
@@ -190,15 +201,19 @@ function gameOver(playerWon) {
   gameInProgress = false;
   clearInterval(gameInterval);
   gameMessage.textContent = '';
-  scoreMessage.textContent = "Your Score: " + playerOneScore + " & opponent Score:" + playerTwoScore;;
+  scoreMessage.textContent = "Your Score: " + playerOneScore + " & opponent Score:" + playerTwoScore;
   againBtn.textContent = '';
 
   if(playerWon) {
     gameMessage.textContent = 'You won!';
     againBtn.textContent = 'Play again';
+    levelUp.hidden = false;
+    againBtn.hidden = true;
   } else {
     gameMessage.textContent = 'You lost!';
     againBtn.textContent = 'Try again';
+    levelUp.hidden = true;
+    againBtn.hidden = false;
   }
   gameplay.className = '';
   gameOverMenu.className = 'active'; 
@@ -228,7 +243,7 @@ function moveEverything() {
     } else if(ballPositionX > canvas.width) {
       resetBall();
       playerOneScore++;
-      difficultyLevel = playerOneScore*.5;
+      //difficultyLevel = playerOneScore*.5;
       if(playerOneScore === scoreToWin) gameOver(true);
     }
     randomizeGame();
